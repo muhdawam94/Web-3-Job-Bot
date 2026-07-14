@@ -46,3 +46,30 @@ JOB_KEYWORDS = {
 }
 
 # Notification Settings
+_email_address = os.environ.get("EMAIL_ADDRESS", "")
+
+NOTIFICATIONS = {
+    "email": {
+        "enabled": bool(_email_address),
+        "to": _email_address,
+        "from": _email_address,
+        "smtp_password": os.environ.get("GMAIL_APP_PASSWORD", "")
+    },
+    "telegram": {
+        "enabled": bool(os.environ.get("TELEGRAM_BOT_TOKEN")),
+        "chat_id": os.environ.get("TELEGRAM_CHAT_ID", ""),
+        "bot_token": os.environ.get("TELEGRAM_BOT_TOKEN", "")
+    },
+    "discord": {
+        "enabled": bool(os.environ.get("DISCORD_WEBHOOK_URL")),
+        "webhook_url": os.environ.get("DISCORD_WEBHOOK_URL", "")
+    }
+}
+
+# Bot Settings
+BOT_CONFIG = {
+    "check_interval_hours": 6,
+    "max_jobs_per_notification": 10,
+    "seen_jobs_file": "seen_jobs.json",
+    "base_url": "https://web3.career"
+}
