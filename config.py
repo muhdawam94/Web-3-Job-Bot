@@ -1,44 +1,48 @@
-name: Web3 Job Bot
+"""
+Web3 Job Bot Configuration
+Everything sensitive or personal (email address, passwords, tokens) is read
+from environment variables. When run via GitHub Actions, these come from
+GitHub Secrets. NEVER hardcode passwords, tokens, or personal info in this file.
+"""
 
-on:
-  schedule:
-    # Runs at 00:00, 06:00, 12:00, 18:00 UTC every day
-    # Note: GitHub Actions cron times are in UTC. WIB (Indonesia) = UTC+7,
-    # so these correspond to 07:00, 13:00, 19:00, 01:00 WIB.
-    - cron: '0 0,6,12,18 * * *'
-  workflow_dispatch: {}  # allows manual "Run workflow" button on GitHub
+import os
 
-permissions:
-  contents: write  # needed so the workflow can commit seen_jobs.json back
+# User Profile
+USER_PROFILE = {
+    "name": "Muhammad Dawam",
+    "skills": [
+        "Web3 Marketing",
+        "Solana Development",
+        "Rust",
+        "Anchor",
+        "Customer Service",
+        "UI/UX Design",
+        "Coding",
+        "Blockchain",
+        "Crypto"
+    ],
+    "experience_level": "Junior-Mid",
+    "preferred_location": ["Remote", "Europe"],
+    "linkedin": "https://www.linkedin.com/in/muh-dawam",
+    "github": "https://github.com/muhdawam94"
+}
 
-jobs:
-  run-bot:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+# Job Search Criteria
+JOB_KEYWORDS = {
+    "must_have": [
+        "marketing", "growth", "community", "social media", "content",
+        "developer", "engineer", "solana", "rust", "blockchain", "web3",
+        "ui", "ux", "design", "frontend",
+        "customer", "support", "success", "community manager"
+    ],
+    "nice_to_have": [
+        "entry level", "junior", "mid-level", "remote", "europe",
+        "anchor", "defi", "nft", "crypto"
+    ],
+    "exclude": [
+        "senior 5+", "10+ years", "phd required", "lead", "principal",
+        "onsite only", "us only", "visa required"
+    ]
+}
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Run job bot
-        env:
-          EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS }}
-          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-        run: python bot.py
-
-      - name: Commit updated seen_jobs.json
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add seen_jobs.json
-          git diff --staged --quiet || git commit -m "Update seen jobs [skip ci]"
-          git push
+# Notification Settings
